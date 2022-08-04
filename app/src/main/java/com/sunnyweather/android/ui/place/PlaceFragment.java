@@ -1,6 +1,7 @@
 package com.sunnyweather.android.ui.place;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,18 +11,28 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.sunnyweather.android.R;
+import com.sunnyweather.android.logic.model.place.Place;
+import com.sunnyweather.android.ui.weather.WeatherActivity;
 
 
 public class PlaceFragment extends Fragment {
+
+
     private PlaceViewModel viewModel;
     private PlaceAdapter adapter;
+
+    public PlaceViewModel getViewModel() {
+        return viewModel;
+    }
 
     @Nullable
     @Override
@@ -35,6 +46,20 @@ public class PlaceFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(PlaceViewModel.class);
+
+        if (viewModel.isPlaceSaved()){
+            Place place = viewModel.getSavedPlace();
+            Intent intent = new Intent(getContext(), WeatherActivity.class);
+            intent.putExtra("location_lng",place.getLocation().getLng());
+            intent.putExtra("location_lat",place.getLocation().getLat());
+            intent.putExtra("place_name",place.getName());
+            startActivity(intent);
+            if(getActivity() != null){
+                getActivity().finish();
+            }
+            return;
+        }
+
         RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
         EditText searchPlaceEdit = getView().findViewById(R.id.searchPlaceEdit);
         ImageView bgImageView = getView().findViewById(R.id.bgImageView);

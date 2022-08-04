@@ -1,6 +1,4 @@
-package com.sunnyweather.android.logic.model;
-
-import com.google.gson.annotations.SerializedName;
+package com.sunnyweather.android.logic.model.place;
 
 import java.util.List;
 

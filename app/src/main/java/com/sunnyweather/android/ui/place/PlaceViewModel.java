@@ -7,7 +7,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.sunnyweather.android.logic.Repository;
-import com.sunnyweather.android.logic.model.Place;
+import com.sunnyweather.android.logic.model.place.Place;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,5 +32,17 @@ public class PlaceViewModel extends ViewModel {
 
     public LiveData<List<Place>> getPlaceLiveData() {
         return placeLiveData;
+    }
+
+    public void savePlace(Place place){
+        Repository.savePlace(place);
+    }
+
+    public Place getSavedPlace(){
+        return Repository.getSavedPlace();
+    }
+
+    public boolean isPlaceSaved(){
+        return Repository.isPlaceSaved();
     }
 }
