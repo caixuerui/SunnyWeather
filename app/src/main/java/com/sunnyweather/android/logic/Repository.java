@@ -36,7 +36,7 @@ public class Repository {
 
 
     public static LiveData<Weather> refreshWeather(String lng, String lat){
-        LiveData<Weather> weatherLiveData = new MutableLiveData<>();
+        MutableLiveData<Weather> weatherLiveData = new MutableLiveData<>();
         MediatorLiveData<Integer> liveDataMerger = new MediatorLiveData<>();
         liveDataMerger.setValue(0);
         final DailyResponse.Daily[] daily = new DailyResponse.Daily[1];
@@ -63,8 +63,17 @@ public class Repository {
             }
         });
 
-        weatherLiveData = Transformations.map(liveDataMerger, new Function<Integer, Weather>() {
+        liveDataMerger.observeForever(new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer input) {
+                if(input == 2){
+                    weatherLiveData.setValue(new Weather(realtime[0],daily[0]));
+                }
+            }
+        });
 
+
+        /*weatherLiveData = Transformations.map(liveDataMerger, new Function<Integer, Weather>() {
             @Override
             public Weather apply(Integer input) {
                 if(input == 2){
@@ -72,7 +81,7 @@ public class Repository {
                 }
                 return null;
             }
-        });
+        });*/
 
         return weatherLiveData;
     }

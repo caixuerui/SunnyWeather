@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sunnyweather.android.MainActivity;
 import com.sunnyweather.android.R;
 import com.sunnyweather.android.logic.model.place.Place;
 import com.sunnyweather.android.ui.weather.WeatherActivity;
@@ -47,7 +48,7 @@ public class PlaceFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(PlaceViewModel.class);
 
-        if (viewModel.isPlaceSaved()){
+        if (getActivity() instanceof MainActivity  && viewModel.isPlaceSaved()){
             Place place = viewModel.getSavedPlace();
             Intent intent = new Intent(getContext(), WeatherActivity.class);
             intent.putExtra("location_lng",place.getLocation().getLng());

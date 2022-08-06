@@ -1,5 +1,6 @@
 package com.sunnyweather.android.ui.place;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,14 +39,24 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
                 int position = holder.getAdapterPosition();
                 Place place = placeList.get(position);
                 fragment.getViewModel().savePlace(place);
-                Intent intent = new Intent(parent.getContext(), WeatherActivity.class);
-                intent.putExtra("location_lng",place.getLocation().getLng());
-                intent.putExtra("location_lat",place.getLocation().getLat());
-                intent.putExtra("place_name",place.getName());
-                fragment.startActivity(intent);
-                if(fragment.getActivity() != null){
-                    fragment.getActivity().finish();
+                Activity activity = fragment.getActivity();
+                if(activity instanceof WeatherActivity){
+                    ((WeatherActivity) activity).getDrawerLayout().closeDrawers();
+                    ((WeatherActivity) activity).getViewModel().setLocationLng(place.getLocation().getLng());
+                    ((WeatherActivity) activity).getViewModel().setLocationLat(place.getLocation().getLat());
+                    ((WeatherActivity) activity).getViewModel().setPlaceName(place.getName());
+                    ((WeatherActivity) activity).refreshWeather();
+                }else{
+                    Intent intent = new Intent(parent.getContext(), WeatherActivity.class);
+                    intent.putExtra("location_lng",place.getLocation().getLng());
+                    intent.putExtra("location_lat",place.getLocation().getLat());
+                    intent.putExtra("place_name",place.getName());
+                    fragment.startActivity(intent);
+                    if(activity != null){
+                        activity.finish();
+                    }
                 }
+
             }
         });
         return holder;
